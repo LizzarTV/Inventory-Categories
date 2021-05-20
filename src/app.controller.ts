@@ -7,6 +7,6 @@ export class AppController {
 
   @Post()
   getData(@Res() response): void {
-    console.error('BODY', response);
+    console.error('BODY', response.json());
   }
 }
