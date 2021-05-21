@@ -7,9 +7,8 @@ export class AppController {
 
   @Post()
   getData(
-    @Req() request: Request,
+    @Req() request,
   ): void {
     console.error('request', request.body);
-
   }
 }
