@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Post, Req, Res } from "@nestjs/common";
 import { AppService } from './app.service';
+import { Request } from "express";
 
 @Controller()
 export class AppController {
@@ -7,13 +8,9 @@ export class AppController {
 
   @Post()
   getData(
-    @Req() request,
-    @Res() response,
-    @Body() body,
+    @Req() request: Request,
   ): void {
-    console.error('request', request);
-    console.error('response', response);
-    console.error('body', body);
+    console.error('request', request.body);
 
   }
 }
