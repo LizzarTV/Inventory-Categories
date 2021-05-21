@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, Res } from "@nestjs/common";
+import { Body, Controller, Get, Logger, Post, Req, Res } from "@nestjs/common";
 import { AppService } from './app.service';
 
 @Controller()
@@ -9,6 +9,6 @@ export class AppController {
   getData(
     @Req() request,
   ): void {
-    console.error('request', request.body);
+    Logger.debug(request.body, 'Request')
   }
 }
