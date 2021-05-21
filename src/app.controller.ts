@@ -6,7 +6,8 @@ export class AppController {
   constructor(private readonly service: AppService) {}
 
   @Post()
-  getData(@Res() response): void {
-    console.error('BODY', response.json());
+  getData(@Res() response, @Body() body): void {
+    console.error('response', response);
+    console.error('body', body);
   }
 }
