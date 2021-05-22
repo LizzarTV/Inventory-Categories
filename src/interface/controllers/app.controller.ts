@@ -11,23 +11,20 @@ export class AppController extends BaseController {
   }
 
   @Post()
-  requestDaprData(@Req() request): void {
+  requestDaprData(@Req() request): any {
     const daprData = this.getDaprData<DTO>(request.body);
-    Logger.debug(daprData, 'Dapr Data');
-    this.ByPattern(daprData.pattern, daprData.data);
+    return this.ByPattern(daprData.pattern, daprData.data);
   }
 
-  private ByPattern(pattern: string, data: DTO): void {
+  private ByPattern(pattern: string, data: DTO): any {
     Logger.debug(pattern, 'Dapr Pattern');
     Logger.debug(data, 'Dapr Data');
     switch (pattern) {
       case 'category-list':
-        this.getList();
-        break;
+        return this.getList();
       case 'category-single':
         const single = data as GetCategory;
-        this.getSingle(single.id);
-        break;
+        return this.getSingle(single.id);
     }
   }
 }

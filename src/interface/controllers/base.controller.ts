@@ -11,16 +11,19 @@ export class BaseController {
     return data.data;
   }
 
-  protected getList(): void {
+  protected getList() {
     Logger.debug('Get List');
+    return [];
   }
 
-  protected getSingle(id: string): void {
+  protected getSingle(id: string) {
     Logger.debug(id, 'Get Single');
+    return { id }
   }
 
-  protected create(title: string): void {
+  protected create(title: string) {
     Logger.debug(title, 'Create');
+    return { title };
   }
 
 }
