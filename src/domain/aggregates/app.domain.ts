@@ -1,5 +1,7 @@
 import { AggregateRoot } from "@nestjs/cqrs";
 import { Nullable } from "../../shared";
+import { Logger } from "@nestjs/common";
+import { AnemicApp } from "../models/app.model";
 
 export class AppDomain extends AggregateRoot {
 
@@ -23,8 +25,7 @@ export class AppDomain extends AggregateRoot {
     return !!this.updated_at;
   }
 
-  // TODO: Return AnemicModel
-  public toAnemic() {
+  public toAnemic(): AnemicApp {
     return {
       id: this.id,
       title: this.title,
@@ -35,6 +36,16 @@ export class AppDomain extends AggregateRoot {
       deleted_at: this.deleted_at,
       isUpdated: this.isUpdated(),
       isDeleted: this.isDeleted(),
+    }
+  }
+
+  public createCategory(): void {
+    try {
+      // TODO: CreatedEvent
+      Logger.debug(this.toAnemic(), 'CategoryDomain createCategory');
+    } catch (e) {
+      // TODO: ErrorEvent
+      Logger.error(e, 'CategoryDomain createCategory');
     }
   }
 }
