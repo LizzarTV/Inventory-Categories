@@ -14,7 +14,7 @@ export class AppController extends BaseController {
   requestDaprData(@Req() request, @Res() response): any {
     const daprData = this.getDaprData<DTO>(request.body);
     const data = this.ByPattern(daprData.pattern, daprData.data);
-    response.send(data);
+    return response.send(data);
   }
 
   private ByPattern(pattern: string, data: DTO): any {

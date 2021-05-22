@@ -13,7 +13,17 @@ export class BaseController {
 
   protected getList() {
     Logger.debug('Get List');
-    return [];
+    return [
+      {
+        id: 1,
+      },
+      {
+        id: 2
+      },
+      {
+        id: 3
+      }
+    ];
   }
 
   protected getSingle(id: string) {
