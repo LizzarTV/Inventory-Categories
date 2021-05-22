@@ -1,4 +1,4 @@
-import { Controller, Logger, Post, Req } from "@nestjs/common";
+import { Controller, Logger, Post, Req, Res } from "@nestjs/common";
 import { BaseController } from "./base.controller";
 import { AppService } from "../../app.service";
 import { DTO, GetCategory } from "../dtos/app.dto";
@@ -11,9 +11,10 @@ export class AppController extends BaseController {
   }
 
   @Post()
-  requestDaprData(@Req() request): any {
+  requestDaprData(@Req() request, @Res() response): any {
     const daprData = this.getDaprData<DTO>(request.body);
-    return this.ByPattern(daprData.pattern, daprData.data);
+    const data = this.ByPattern(daprData.pattern, daprData.data);
+    response.send(data);
   }
 
   private ByPattern(pattern: string, data: DTO): any {
