@@ -6,7 +6,7 @@ import { DTO } from "../dtos/app.dto";
 @Controller()
 export class AppController extends BaseController {
 
-  constructor(private readonly service: AppService) {
+  constructor() {
     super();
   }
 
