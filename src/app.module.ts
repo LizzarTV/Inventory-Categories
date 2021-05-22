@@ -1,7 +1,7 @@
 import { HttpModule, Module } from "@nestjs/common";
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from "@nestjs/config";
+import { InterfaceModule } from "./interface/interface.module";
 
 @Module({
   imports: [
@@ -10,8 +10,8 @@ import { ConfigModule } from "@nestjs/config";
       ignoreEnvFile: true,
       isGlobal: true,
     }),
+    InterfaceModule,
   ],
-  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}

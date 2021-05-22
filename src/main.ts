@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { urlencoded, json } from 'body-parser';
-import { DaprMiddleware } from "./dapr.middleware";
+import { DaprMiddleware } from "./shared/dapr.middleware";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
