@@ -14,5 +14,11 @@ export class AppController extends BaseController {
   requestDaprData(@Req() request): void {
     const daprData = this.getDaprData<DTO>(request.body);
     Logger.debug(daprData, 'Dapr Data');
+    this.ByPattern(daprData.pattern, daprData.data);
+  }
+
+  private ByPattern(pattern: string, data: DTO): void {
+    Logger.debug(pattern, 'Dapr Pattern');
+    Logger.debug(data, 'Dapr Data');
   }
 }
