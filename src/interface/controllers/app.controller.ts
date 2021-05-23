@@ -1,5 +1,5 @@
 import { Controller, Inject, Logger, OnApplicationBootstrap } from "@nestjs/common";
-import { DTO, GetCategory } from "../dtos/app.dto";
+import { GetCategory } from "../dtos/app.dto";
 import { ClientProxy, Ctx, MessagePattern, Payload, RmqContext } from "@nestjs/microservices";
 
 @Controller()
@@ -10,7 +10,7 @@ export class AppController implements OnApplicationBootstrap {
   ) { }
 
   async onApplicationBootstrap(): Promise<void> {
-    await this.proxy.connect().then(() => Logger.debug('Proxy connected...')).catch(err => Logger.error(err));
+    // await this.proxy.connect().then(() => Logger.debug('Proxy connected...')).catch(err => Logger.error(err));
   }
 
   @MessagePattern('category-list')
@@ -30,7 +30,7 @@ export class AppController implements OnApplicationBootstrap {
   }
 
   @MessagePattern('category-single')
-  getCategory(@Payload() data: any, @Ctx() context: RmqContext) {
+  getCategory(@Payload() data: GetCategory, @Ctx() context: RmqContext) {
     this.ackMessage(context);
     return {
       id: data.id

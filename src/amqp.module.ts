@@ -18,6 +18,7 @@ const amqpService = {
             port,
             username: user,
             password,
+            vhost: '/'
         } as RmqUrl;
         const clientOptions = {
             transport: Transport.RMQ,
