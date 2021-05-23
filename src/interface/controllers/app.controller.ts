@@ -1,5 +1,5 @@
-import { Controller, HttpException, UseFilters } from '@nestjs/common';
-import { CreateCategory, GetCategory } from '../dtos/app.dto';
+import { Controller, HttpException, Logger, UseFilters } from "@nestjs/common";
+import { CreateCategory, DeleteCategory, GetCategory, UpdateCategory } from "../dtos/app.dto";
 import {
   ClientProxy,
   Ctx,
@@ -12,6 +12,9 @@ import { GetCategoriesQuery } from '../../application/queries/impl/GetCategories
 import { ExceptionFilter } from '../../shared/base.filter';
 import { GetCategoryQuery } from '../../application/queries/impl/GetCategory.query';
 import { CreateCategoryCommand } from '../../application/commands/impl/CreateCategory.command';
+import { UpdateCategoryCommand } from "../../application/commands/impl/UpdateCategory.command";
+import { DeleteCategoryCommand } from "../../application/commands/impl/DeleteCategory.command";
+import { RestoreCategoryCommand } from "../../application/commands/impl/RestoreCategory.command";
 
 @Controller()
 export class AppController {
@@ -40,6 +43,30 @@ export class AppController {
     this.ackMessage(context);
     return this.commandBus.execute(new CreateCategoryCommand(data.title));
   }
+
+  @UseFilters(new ExceptionFilter())
+  @MessagePattern('category-update')
+  updateCategory(@Payload() data: UpdateCategory, @Ctx() context: RmqContext) {
+    this.ackMessage(context);
+    return this.commandBus.execute(new UpdateCategoryCommand(data.id, data.title, data.active));
+  }
+
+  @UseFilters(new ExceptionFilter())
+  @MessagePattern('category-delete')
+  deleteCategory(@Payload() data: DeleteCategory, @Ctx() context: RmqContext) {
+    this.ackMessage(context);
+    Logger.debug(context.getPattern());
+    return this.commandBus.execute(new DeleteCategoryCommand(data.id));
+  }
+
+  @UseFilters(new ExceptionFilter())
+  @MessagePattern('category-restore')
+  restoreCategory(@Payload() data: DeleteCategory, @Ctx() context: RmqContext) {
+    this.ackMessage(context);
+    Logger.debug(context.getPattern());
+    return this.commandBus.execute(new RestoreCategoryCommand(data.id));
+  }
+
 
   private ackMessage(context: RmqContext): void {
     const channel = context.getChannelRef();

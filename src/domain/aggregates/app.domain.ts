@@ -1,8 +1,14 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 import { Nullable } from '../../shared';
-import { BadRequestException, Logger } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Logger } from "@nestjs/common";
 import { AnemicApp } from '../models/app.model';
 import { NotEmptyStringValidation } from '../validations/not-empty.validation';
+import { ErrorDomainEvent } from "../events/error.event";
+import { CreatedDomainEvent } from "../events/created.event";
+import { DeletedDomainEvent } from "../events/deleted.event";
+import { UpdatedDomainEvent } from "../events/updated.event";
+import { RestoredDomainEvent } from "../events/restored.event";
+import { RpcException } from "@nestjs/microservices";
 
 export class AppDomain extends AggregateRoot {
   constructor(
@@ -42,23 +48,91 @@ export class AppDomain extends AggregateRoot {
   public createCategory(): void {
     try {
       this.validateAll(this.title, this.slug);
-      // TODO: CreatedEvent
-      Logger.debug(this.toAnemic(), 'CategoryDomain createCategory');
+      const event = new CreatedDomainEvent(this.toAnemic());
+      this.apply(event);
     } catch (e) {
-      // TODO: ErrorEvent
-      Logger.error(e, 'CategoryDomain createCategory');
+      const event = new ErrorDomainEvent(this.toAnemic());
+      this.apply(event);
+    }
+  }
+
+  public updateTitle(title: string): void {
+    try {
+      this.validateTitle(title);
+      this.title = title;
+      const event = new UpdatedDomainEvent(this.toAnemic());
+      this.apply(event);
+    } catch (e) {
+      const event = new ErrorDomainEvent(this.toAnemic());
+      this.apply(event);
+    }
+  }
+
+  public updateSlug(slug: string): void {
+    try {
+      this.validateSlug(slug);
+      this.slug = slug;
+      const event = new UpdatedDomainEvent(this.toAnemic());
+      this.apply(event);
+    } catch (e) {
+      const event = new ErrorDomainEvent(this.toAnemic());
+      this.apply(event);
+    }
+  }
+
+  public updateActive(active: boolean): void {
+    this.active = active;
+    const event = new UpdatedDomainEvent(this.toAnemic());
+    this.apply(event);
+  }
+
+  public delete(): void {
+    if (this.isDeleted()) {
+      const event = new ErrorDomainEvent(this.toAnemic());
+      this.apply(event);
+      throw new RpcException({
+        code: HttpStatus.BAD_REQUEST,
+        message: 'Entity is already deleted',
+      });
+    } else {
+      this.deleted_at = new Date();
+      this.updated_at = new Date();
+      const event = new DeletedDomainEvent(this.toAnemic());
+      this.apply(event);
+    }
+  }
+
+  public restore(): void {
+    if (!this.isDeleted()) {
+      const event = new ErrorDomainEvent(this.toAnemic());
+      this.apply(event);
+      throw new RpcException({
+        code: HttpStatus.BAD_REQUEST,
+        message: 'Entity is not deleted',
+      });
+    } else {
+      this.deleted_at = null;
+      this.updated_at = new Date();
+      const event = new RestoredDomainEvent(this.toAnemic());
+      this.apply(event);
     }
   }
 
   private validateTitle(title: string): void {
     if (NotEmptyStringValidation(title.trim())) {
-      throw new BadRequestException('Title is empty.');
+      throw new RpcException({
+        code: HttpStatus.BAD_REQUEST,
+        message: 'Title is empty',
+      });
     }
   }
 
   private validateSlug(slug: string): void {
     if (NotEmptyStringValidation(slug.trim())) {
-      throw new BadRequestException('Slug is empty.');
+      throw new RpcException({
+        code: HttpStatus.BAD_REQUEST,
+        message: 'Slug is empty',
+      });
     }
   }
 
@@ -66,7 +140,10 @@ export class AppDomain extends AggregateRoot {
     const titleStatus = NotEmptyStringValidation(title);
     const slugStatus = NotEmptyStringValidation(slug);
     if (titleStatus && slugStatus) {
-      throw new BadRequestException();
+      throw new RpcException({
+        code: HttpStatus.BAD_REQUEST,
+        message: 'Title or Slug did not passed the validation',
+      });
     }
   }
 }
