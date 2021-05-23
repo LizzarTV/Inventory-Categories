@@ -4,8 +4,9 @@ import { DomainModule } from "../domain/domain.module";
 import { InfrastructureModule } from "../infrastructure/infrastructure.module";
 import { GetCategoriesHandler } from "./queries/handlers/GetCategories.handler";
 import { GetCategoryHandler } from "./queries/handlers/GetCategory.handler";
+import { CreateCategoryHandler } from "./commands/handlers/CreateCategory.handler";
 
-const Handlers = [GetCategoriesHandler, GetCategoryHandler];
+const Handlers = [GetCategoriesHandler, GetCategoryHandler, CreateCategoryHandler];
 
 @Module({
   imports: [

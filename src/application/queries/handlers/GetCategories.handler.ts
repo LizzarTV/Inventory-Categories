@@ -4,6 +4,7 @@ import { AppFactory } from "../../../domain/factories/app.factory";
 import { AnemicApp } from "../../../domain/models/app.model";
 import { AppDomain } from "../../../domain/aggregates/app.domain";
 import { RpcException } from "@nestjs/microservices";
+import { HttpStatus } from "@nestjs/common";
 
 @QueryHandler(GetCategoriesQuery)
 export class GetCategoriesHandler implements IQueryHandler<GetCategoriesQuery> {
@@ -18,6 +19,6 @@ export class GetCategoriesHandler implements IQueryHandler<GetCategoriesQuery> {
     if (data !== null) {
       return data.map((item: AppDomain) => item.toAnemic());
     }
-    throw new RpcException({ code: 404, message: 'No Entities found' });
+    throw new RpcException({ code: HttpStatus.NOT_FOUND, message: 'No Entities found' });
   }
 }
