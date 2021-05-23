@@ -1,4 +1,4 @@
-import { Optional } from "../../shared";
+import { Optional } from '../../shared';
 
 export interface GetCategory {
   id: string;
@@ -17,5 +17,3 @@ export interface UpdateCategory {
 export interface DeleteCategory {
   id: string;
 }
-
-export type DTO = GetCategory | CreateCategory | UpdateCategory | DeleteCategory;
