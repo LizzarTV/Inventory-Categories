@@ -3,15 +3,9 @@ import { GetCategory } from "../dtos/app.dto";
 import { ClientProxy, Ctx, MessagePattern, Payload, RmqContext } from "@nestjs/microservices";
 
 @Controller()
-export class AppController implements OnApplicationBootstrap {
+export class AppController {
 
-  constructor(
-    @Inject('AMQP_SERVICE') private readonly proxy: ClientProxy,
-  ) { }
-
-  async onApplicationBootstrap(): Promise<void> {
-    // await this.proxy.connect().then(() => Logger.debug('Proxy connected...')).catch(err => Logger.error(err));
-  }
+  constructor() { }
 
   @MessagePattern('category-list')
   getCategories(@Ctx() context: RmqContext) {
