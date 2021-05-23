@@ -15,6 +15,17 @@ export class AppController {
     Logger.debug('categories-list', 'AppController');
     //
     this.acknowledgeMessage(channel, originalMsg);
+    return [
+      {
+        id: 1
+      },
+      {
+        id: 2
+      },
+      {
+        id: 3
+      }
+    ];
   }
 
   @MessagePattern('category-single')
