@@ -1,15 +1,20 @@
-import { Controller, HttpException, UseFilters } from "@nestjs/common";
-import { CreateCategory, GetCategory } from "../dtos/app.dto";
-import { ClientProxy, Ctx, MessagePattern, Payload, RmqContext } from "@nestjs/microservices";
-import { CommandBus, QueryBus } from "@nestjs/cqrs";
-import { GetCategoriesQuery } from "../../application/queries/impl/GetCategories.query";
-import { ExceptionFilter } from "../../shared/base.filter";
-import { GetCategoryQuery } from "../../application/queries/impl/GetCategory.query";
-import { CreateCategoryCommand } from "../../application/commands/impl/CreateCategory.command";
+import { Controller, HttpException, UseFilters } from '@nestjs/common';
+import { CreateCategory, GetCategory } from '../dtos/app.dto';
+import {
+  ClientProxy,
+  Ctx,
+  MessagePattern,
+  Payload,
+  RmqContext,
+} from '@nestjs/microservices';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { GetCategoriesQuery } from '../../application/queries/impl/GetCategories.query';
+import { ExceptionFilter } from '../../shared/base.filter';
+import { GetCategoryQuery } from '../../application/queries/impl/GetCategory.query';
+import { CreateCategoryCommand } from '../../application/commands/impl/CreateCategory.command';
 
 @Controller()
 export class AppController {
-
   constructor(
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
@@ -36,10 +41,9 @@ export class AppController {
     return this.commandBus.execute(new CreateCategoryCommand(data.title));
   }
 
-
   private ackMessage(context: RmqContext): void {
     const channel = context.getChannelRef();
     const originalMsg = context.getMessage();
-    // channel.ack(originalMsg);
+    channel.ack(originalMsg);
   }
 }

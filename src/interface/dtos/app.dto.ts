@@ -1,4 +1,4 @@
-import { Optional } from "../../shared";
+import { Optional } from '../../shared';
 
 export interface GetCategory {
   id: string;

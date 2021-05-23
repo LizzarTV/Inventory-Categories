@@ -1,8 +1,12 @@
-import { NestFactory } from "@nestjs/core";
-import { AppModule } from "./app.module";
-import { MicroserviceOptions, RmqOptions, Transport } from "@nestjs/microservices";
-import { RmqUrl } from "@nestjs/microservices/external/rmq-url.interface";
-import { Logger } from "@nestjs/common";
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+import {
+  MicroserviceOptions,
+  RmqOptions,
+  Transport,
+} from '@nestjs/microservices';
+import { RmqUrl } from '@nestjs/microservices/external/rmq-url.interface';
+import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,13 +22,16 @@ async function bootstrapMicroservice() {
       urls: [`${AMQP_CONNECTION_STRING || 'amqp://localhost:5672/'}`],
       queue: AMQP_QUEUE || 'queue',
       queueOptions: {
-        durable: false
+        durable: false,
       },
       noAck: false,
     },
   } as RmqOptions;
   //
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, clientOptions);
-  app.listen(() => Logger.debug('Category Service is listening...'))
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+    AppModule,
+    clientOptions,
+  );
+  app.listen(() => Logger.debug('Category Service is listening...'));
 }
 bootstrapMicroservice();

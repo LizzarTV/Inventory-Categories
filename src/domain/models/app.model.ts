@@ -1,4 +1,4 @@
-import { AnemicBase } from "./base.model";
+import { AnemicBase } from './base.model';
 
 export interface AnemicApp extends AnemicBase {
   readonly title: string;

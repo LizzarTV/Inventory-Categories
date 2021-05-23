@@ -1,4 +1,4 @@
-import { Nullable } from "../../shared";
+import { Nullable } from '../../shared';
 
 export interface AnemicBase {
   readonly id: string;

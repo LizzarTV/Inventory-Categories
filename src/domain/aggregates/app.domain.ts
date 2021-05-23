@@ -1,11 +1,10 @@
-import { AggregateRoot } from "@nestjs/cqrs";
-import { Nullable } from "../../shared";
-import { BadRequestException, Logger } from "@nestjs/common";
-import { AnemicApp } from "../models/app.model";
-import { NotEmptyStringValidation } from "../validations/not-empty.validation";
+import { AggregateRoot } from '@nestjs/cqrs';
+import { Nullable } from '../../shared';
+import { BadRequestException, Logger } from '@nestjs/common';
+import { AnemicApp } from '../models/app.model';
+import { NotEmptyStringValidation } from '../validations/not-empty.validation';
 
 export class AppDomain extends AggregateRoot {
-
   constructor(
     private readonly id: string,
     private title: string,
@@ -37,7 +36,7 @@ export class AppDomain extends AggregateRoot {
       deleted_at: this.deleted_at,
       isUpdated: this.isUpdated(),
       isDeleted: this.isDeleted(),
-    }
+    };
   }
 
   public createCategory(): void {
