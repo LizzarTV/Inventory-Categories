@@ -1,31 +1,35 @@
-import { Controller, Logger, Post, Req, Res } from "@nestjs/common";
-import { BaseController } from "./base.controller";
-import { AppService } from "../../app.service";
+import { Controller, Logger } from "@nestjs/common";
 import { DTO, GetCategory } from "../dtos/app.dto";
+import { Ctx, MessagePattern, Payload, RmqContext } from "@nestjs/microservices";
 
 @Controller()
-export class AppController extends BaseController {
+export class AppController {
 
-  constructor() {
-    super();
+  constructor() { }
+
+  @MessagePattern('category-list')
+  getCategories(@Ctx() context: RmqContext) {
+    const channel = context.getChannelRef();
+    const originalMsg = context.getMessage();
+    //
+    Logger.debug('categories-list', 'AppController');
+    //
+    this.acknowledgeMessage(channel, originalMsg);
   }
 
-  @Post()
-  requestDaprData(@Req() request, @Res() response): any {
-    const daprData = this.getDaprData<DTO>(request.body);
-    const data = this.ByPattern(daprData.pattern, daprData.data);
-    return response.send(data);
+  @MessagePattern('category-single')
+  getCategory(@Payload() data: any, @Ctx() context: RmqContext) {
+    const channel = context.getChannelRef();
+    const originalMsg = context.getMessage();
+    //
+    Logger.debug('categories-single', 'AppController');
+    Logger.debug(data);
+    //
+    this.acknowledgeMessage(channel, originalMsg);
   }
 
-  private ByPattern(pattern: string, data: DTO): any {
-    Logger.debug(pattern, 'Dapr Pattern');
-    Logger.debug(data, 'Dapr Data');
-    switch (pattern) {
-      case 'category-list':
-        return this.getList();
-      case 'category-single':
-        const single = data as GetCategory;
-        return this.getSingle(single.id);
-    }
+
+  private acknowledgeMessage(channel: any, message: Record<string, any>): void {
+    channel.ack(message);
   }
 }
